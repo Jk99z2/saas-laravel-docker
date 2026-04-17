@@ -1,0 +1,15 @@
+# Laravel
+/vendor
+/node_modules
+.env
+
+# logs
+/storage/logs
+/storage/*.key
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# OS
+.DS_Store
