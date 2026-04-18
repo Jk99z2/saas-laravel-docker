@@ -33,9 +33,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: saas_main
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: Root#Hielitos2026x
       MYSQL_USER: saas
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: Saas#Hielitos2026x
     volumes:
       - dbdata:/var/lib/mysql
     networks:
