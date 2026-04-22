@@ -15,8 +15,10 @@ class ProductoFoto extends Model
     }
 
     // URL pública de la foto desde R2
+
     public function getUrlPublicaAttribute()
     {
-        return Storage::disk('r2')->url($this->url_r2);
+        return Storage::disk('public')->url($this->url_r2);
     }
+
 }

@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Admin\CategoriaController;
+use App\Http\Controllers\Admin\ProductoController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categorias', CategoriaController::class)->except(['show', 'create', 'edit']);
+    Route::resource('productos', ProductoController::class)->except(['show', 'create', 'edit']);
+    Route::delete('productos/{producto}/fotos', [ProductoController::class, 'destroyFoto'])->name('productos.fotos.destroy');
 });
 
 require __DIR__.'/auth.php';
