@@ -5,25 +5,36 @@ import { Head } from '@inertiajs/vue3';
 
 <template>
     <Head title="Dashboard" />
-
     <AuthenticatedLayout>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-                Dashboard
-            </h2>
+            <h1 class="text-lg font-semibold text-sky-900">Dashboard</h1>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
-                >
-                    <div class="p-6 text-gray-900">
-                        You're logged in!
-                    </div>
-                </div>
+        <!-- Stats cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                <p class="text-sm text-sky-500 font-medium">Ventas hoy</p>
+                <p class="text-3xl font-bold text-sky-900 mt-1">$0.00</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                <p class="text-sm text-sky-500 font-medium">Ventas este mes</p>
+                <p class="text-3xl font-bold text-sky-900 mt-1">$0.00</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                <p class="text-sm text-sky-500 font-medium">Gastos este mes</p>
+                <p class="text-3xl font-bold text-sky-900 mt-1">$0.00</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                <p class="text-sm text-sky-500 font-medium">Utilidad</p>
+                <p class="text-3xl font-bold text-sky-900 mt-1">$0.00</p>
+            </div>
+        </div>
+
+        <!-- Placeholder para gráfica -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+            <p class="text-sm font-semibold text-sky-700 mb-4">Ventas por día</p>
+            <div class="h-48 flex items-center justify-center text-sky-300 text-sm">
+                Aquí irá la gráfica de ventas
             </div>
         </div>
     </AuthenticatedLayout>
