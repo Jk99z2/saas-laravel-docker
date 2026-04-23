@@ -18,22 +18,26 @@ class ProductoController extends Controller
             ->orderBy('nombre')
             ->get()
             ->map(function ($producto) {
+                $foto = $producto->fotos->first();
+
                 return [
-                    'id'              => $producto->id,
-                    'nombre'          => $producto->nombre,
-                    'slug'            => $producto->slug,
-                    'descripcion'     => $producto->descripcion,
-                    'precio_venta'    => $producto->precio_venta,
-                    'activo'          => $producto->activo,
-                    'categoria'       => $producto->categoria,
-                    'foto_principal' => $producto->fotos->first() ? Storage::disk('public')->url($producto->fotos->first()->url_r2) : null,
-                    'costo_produccion'=> $producto->costo_produccion,
-                    'margen_ganancia' => $producto->margen_ganancia,
-                    'ganancia_neta'   => $producto->ganancia_neta,
+                    'id'               => $producto->id,
+                    'nombre'           => $producto->nombre,
+                    'slug'             => $producto->slug,
+                    'descripcion'      => $producto->descripcion,
+                    'precio_venta'     => $producto->precio_venta,
+                    'activo'           => $producto->activo,
+                    'categoria'        => $producto->categoria,
+                    'foto_principal'   => $foto ? Storage::url($foto->url_r2) : null,
+                    'costo_produccion' => $producto->costo_produccion,
+                    'margen_ganancia'  => $producto->margen_ganancia,
+                    'ganancia_neta'    => $producto->ganancia_neta,
                 ];
             });
 
-        $categorias = Categoria::where('activo', true)->orderBy('nombre')->get();
+        $categorias = Categoria::where('activo', true)
+            ->orderBy('nombre')
+            ->get();
 
         return Inertia::render('Admin/Productos/Index', [
             'productos'  => $productos,
@@ -56,10 +60,9 @@ class ProductoController extends Controller
 
         $producto = Producto::create($validated);
 
-        // Subir fotos a R2
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $index => $foto) {
-                $disk = config('filesystems.default');
+
                 $path = $foto->store("productos/{$producto->id}");
 
                 $producto->fotos()->create([
@@ -88,12 +91,13 @@ class ProductoController extends Controller
 
         $producto->update($validated);
 
-        // Subir nuevas fotos a R2
         if ($request->hasFile('fotos')) {
             $ultimoOrden = $producto->fotos()->max('orden') ?? -1;
+
             foreach ($request->file('fotos') as $index => $foto) {
-                $disk = config('filesystems.default');
-                $path = $foto->store("productos/{$producto->id}", 'public');
+
+                $path = $foto->store("productos/{$producto->id}");
+
                 $producto->fotos()->create([
                     'url_r2' => $path,
                     'orden'  => $ultimoOrden + $index + 1,
@@ -106,9 +110,8 @@ class ProductoController extends Controller
 
     public function destroy(Producto $producto)
     {
-        // Eliminar fotos de R2
         foreach ($producto->fotos as $foto) {
-            Storage::disk('public')->delete($foto->url_r2);
+            Storage::delete($foto->url_r2);
             $foto->delete();
         }
 
@@ -120,7 +123,8 @@ class ProductoController extends Controller
     public function destroyFoto(Request $request, Producto $producto)
     {
         $foto = $producto->fotos()->findOrFail($request->foto_id);
-        Storage::disk('public')->delete($foto->url_r2);
+
+        Storage::delete($foto->url_r2);
         $foto->delete();
 
         return redirect()->back()->with('success', 'Foto eliminada.');
