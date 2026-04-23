@@ -60,7 +60,8 @@ class ProductoController extends Controller
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $index => $foto) {
                 $disk = config('filesystems.default');
-                $path = $foto->store("productos/{$producto->id}", 'public');
+                $path = $foto->store("productos/{$producto->id}");
+
                 $producto->fotos()->create([
                     'url_r2' => $path,
                     'orden'  => $index,
