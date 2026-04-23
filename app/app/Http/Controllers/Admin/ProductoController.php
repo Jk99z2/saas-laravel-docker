@@ -18,7 +18,6 @@ class ProductoController extends Controller
             ->orderBy('nombre')
             ->get()
             ->map(function ($producto) {
-                $foto = $producto->fotos->first();
 
                 return [
                     'id'               => $producto->id,
@@ -28,10 +27,22 @@ class ProductoController extends Controller
                     'precio_venta'     => $producto->precio_venta,
                     'activo'           => $producto->activo,
                     'categoria'        => $producto->categoria,
-                    'foto_principal'   => $foto ? Storage::url($foto->url_r2) : null,
                     'costo_produccion' => $producto->costo_produccion,
                     'margen_ganancia'  => $producto->margen_ganancia,
                     'ganancia_neta'    => $producto->ganancia_neta,
+
+                    // 👇 foto principal ya con URL correcta
+                    'foto_principal' => optional($producto->fotos->first(), function ($foto) {
+                        return Storage::url($foto->url_r2);
+                    }),
+
+                    // 👇 TODAS las fotos con URL lista para frontend
+                    'fotos' => $producto->fotos->map(function ($foto) {
+                        return [
+                            'id'  => $foto->id,
+                            'url' => Storage::url($foto->url_r2),
+                        ];
+                    }),
                 ];
             });
 
@@ -63,6 +74,7 @@ class ProductoController extends Controller
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $index => $foto) {
 
+                // 👇 usa disk dinámico (public o R2)
                 $path = $foto->store("productos/{$producto->id}");
 
                 $producto->fotos()->create([

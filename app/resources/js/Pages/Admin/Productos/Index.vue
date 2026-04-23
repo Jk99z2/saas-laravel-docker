@@ -229,7 +229,7 @@ function formatPrice(val) {
                                 <!-- Fotos actuales -->
                                 <div v-if="producto.fotos?.length" class="flex gap-2 flex-wrap">
                                     <div v-for="foto in producto.fotos" :key="foto.id" class="relative">
-                                        <img :src="foto.url_r2" class="w-16 h-16 object-cover rounded-lg" />
+                                        <img :src="foto.url" class="w-16 h-16 object-cover rounded-lg" />
                                         <button type="button" @click="destroyFoto(producto, foto.id)"
                                             class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">
                                             ✕
